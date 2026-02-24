@@ -4,12 +4,16 @@
     "context": "..",
     "dockerfile": "Dockerfile"
   },
-  "postCreateCommand": "pwd",
+
+  "postCreateCommand": "conda activate beach",
+
   "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "python.defaultInterpreterPath": "/opt/conda/envs/beach/bin/python"
   },
+
   "extensions": [
     "ms-python.python",
-    "ms-toolsai.jupyter"    
+    "ms-toolsai.jupyter"
   ]
 }
