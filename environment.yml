@@ -3,8 +3,6 @@ name: beach
 channels:
   - conda-forge
 
-channel_priority: strict
-
 dependencies:
   # Core
   - python=3.10
@@ -26,10 +24,10 @@ dependencies:
   - utide=0.3
   - shapely=2.0
 
-  # Symbolic / utilities
+  # Utilities
   - sympy=1.12
   - progressbar2
 
-  # Jupyter stack
+  # Jupyter
   - jupyterlab=3.5
   - notebook=6.5
