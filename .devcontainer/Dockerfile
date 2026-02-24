@@ -1,16 +1,20 @@
 FROM mcr.microsoft.com/devcontainers/miniconda:1-3
 
-# Copy environment.yml (if found) to a temp location so we update the environment. Also
-# copy "noop.txt" so the COPY instruction does not fail if no environment.yml exists.
-COPY environment.yml* /tmp/conda-tmp/
-RUN if [ -f "/tmp/conda-tmp/environment.yml" ]; then umask 0002 && /opt/conda/bin/conda env update -n base -f /tmp/conda-tmp/environment.yml; fi \
-    && rm -rf /tmp/conda-tmp
+# Install mamba (fast solver)
+RUN conda install -n base -c conda-forge mamba -y
 
-# [Optional] Uncomment to install a different version of Python than the default
-#RUN conda install -y dask
-#     && pip install --no-cache-dir pipx \
-#     && pipx reinstall-all
+# Enforce strict channel priority and remove defaults
+RUN conda config --set channel_priority strict \
+    && conda config --remove channels defaults || true
 
-# [Optional] Uncomment this section to install additional OS packages.
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get -y install --no-install-recommends <your-package-list-here>
+# Copy environment file
+COPY environment.yml /tmp/environment.yml
+
+# Create the beach environment using mamba (DO NOT update base)
+RUN mamba env create -f /tmp/environment.yml \
+    && conda clean -afy \
+    && rm /tmp/environment.yml
+
+# Make beach the default environment
+ENV CONDA_DEFAULT_ENV=beach
+ENV PATH=/opt/conda/envs/beach/bin:$PATH
